@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Your Trek - Waypoint</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L20 12L30 14L22 22L24 32L16 26L8 32L10 22L2 14L12 12L16 2Z" fill="currentColor"/>
+                    </svg>
+                    <span>Waypoint</span>
+                </div>
+            </div>
+            <div class="nav-center">
+                <div class="search-bar">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" fill="currentColor"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search treks...">
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-btn" onclick="window.location.href='discover.html'">Discover</button>
+                <button class="nav-btn" onclick="window.location.href='add-trek.html'">Add your treks</button>
+                <button class="nav-btn" onclick="window.location.href='plan-trek.html'">Plan a trek</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <div id="authSection"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <h1 class="page-title">Plan Your Trek</h1>
+        
+        <div class="form-container">
+            <form id="planTrekForm">
+                <div class="form-group">
+                    <label for="trekName">Name of Trek *</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="trekName" autocomplete="off" required>
+                        <div class="autocomplete-suggestions" id="suggestions" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trekDate">Date of Trek *</label>
+                        <input type="date" id="trekDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startTime">Preferred Start Time *</label>
+                        <input type="time" id="startTime" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startLocation">Start Location *</label>
+                    <input type="text" id="startLocation" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numPeople">Number of People *</label>
+                    <input type="number" id="numPeople" min="1" value="1" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Generate Plan</button>
+            </form>
+
+            <div id="planResult" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        WaypointApp.loadData();
+        WaypointApp.checkAuth();
+        WaypointApp.updateAuthUI();
+
+        const trekNameInput = document.getElementById('trekName');
+        const suggestionsDiv = document.getElementById('suggestions');
+
+        // Autocomplete functionality
+        trekNameInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            if (query.length > 0) {
+                const allTreks = WaypointApp.getAllTreks();
+                const matches = allTreks.filter(trek => 
+                    trek.name.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 5);
+
+                if (matches.length > 0) {
+                    suggestionsDiv.innerHTML = matches.map(trek => 
+                        `<div class="autocomplete-suggestion" data-trek-name="${trek.name}">${trek.name}</div>`
+                    ).join('');
+                    suggestionsDiv.style.display = 'block';
+                } else {
+                    suggestionsDiv.style.display = 'none';
+                }
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        // Handle suggestion clicks
+        suggestionsDiv.addEventListener('click', (e) => {
+            if (e.target.classList.contains('autocomplete-suggestion')) {
+                trekNameInput.value = e.target.getAttribute('data-trek-name');
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-container')) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        const form = document.getElementById('planTrekForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const trekName = document.getElementById('trekName').value;
+            const date = document.getElementById('trekDate').value;
+            const startTime = document.getElementById('startTime').value;
+            const startLocation = document.getElementById('startLocation').value;
+            const numPeople = parseInt(document.getElementById('numPeople').value);
+
+            // Find matching trek
+            const allTreks = WaypointApp.getAllTreks();
+            const matchingTrek = allTreks.find(trek => 
+                trek.name.toLowerCase() === trekName.toLowerCase()
+            );
+
+            // Generate plan
+            const plan = generatePlan(trekName, date, startTime, startLocation, numPeople, matchingTrek);
+            displayPlan(plan);
+        });
+
+        function generatePlan(trekName, date, startTime, startLocation, numPeople, trek) {
+            const plan = {
+                trekName,
+                date,
+                startTime,
+                startLocation,
+                numPeople,
+                estimatedDuration: trek ? `${Math.ceil(trek.distance / 3)} hours` : '6-8 hours',
+                difficulty: trek ? `${trek.difficulty}/10` : 'Moderate',
+                distance: trek ? `${trek.distance} km` : 'Varies',
+                elevation: trek ? `${trek.elevation} m` : 'Varies',
+                recommendations: []
+            };
+
+            // Add recommendations based on trek data
+            if (trek) {
+                plan.recommendations.push(`Start early (around ${startTime}) to avoid afternoon heat.`);
+                plan.recommendations.push(`Pack sufficient water (at least 2-3 liters per person).`);
+                plan.recommendations.push(`Wear appropriate trekking shoes with good grip.`);
+                plan.recommendations.push(`Carry first aid kit and emergency supplies.`);
+                
+                if (trek.difficulty >= 7) {
+                    plan.recommendations.push(`This is a challenging trek. Ensure all participants are physically fit.`);
+                }
+                
+                if (trek.elevation > 3000) {
+                    plan.recommendations.push(`High altitude trek - allow time for acclimatization.`);
+                }
+            } else {
+                plan.recommendations.push(`Research the trek route thoroughly before starting.`);
+                plan.recommendations.push(`Inform someone about your trekking plans.`);
+                plan.recommendations.push(`Carry navigation tools (GPS, map, compass).`);
+                plan.recommendations.push(`Check weather conditions before departure.`);
+            }
+
+            if (numPeople > 1) {
+                plan.recommendations.push(`With ${numPeople} people, maintain group pace and stay together.`);
+            }
+
+            return plan;
+        }
+
+        function displayPlan(plan) {
+            const planResult = document.getElementById('planResult');
+            planResult.style.display = 'block';
+            planResult.innerHTML = `
+                <div class="plan-result">
+                    <h2>Your Trek Plan</h2>
+                    
+                    <div class="plan-section">
+                        <h3>Trek Details</h3>
+                        <p><strong>Trek Name:</strong> ${plan.trekName}</p>
+                        <p><strong>Date:</strong> ${new Date(plan.date).toLocaleDateString()}</p>
+                        <p><strong>Start Time:</strong> ${plan.startTime}</p>
+                        <p><strong>Start Location:</strong> ${plan.startLocation}</p>
+                        <p><strong>Number of People:</strong> ${plan.numPeople}</p>
+                    </div>
+
+                    <div class="plan-section">
+                        <h3>Trek Information</h3>
+                        <p><strong>Estimated Duration:</strong> ${plan.estimatedDuration}</p>
+                        <p><strong>Difficulty Level:</strong> ${plan.difficulty}</p>
+                        <p><strong>Distance:</strong> ${plan.distance}</p>
+                        <p><strong>Elevation:</strong> ${plan.elevation}</p>
+                    </div>
+
+                    <div class="plan-section">
+                        <h3>Recommendations</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            ${plan.recommendations.map(rec => `<li style="padding: 0.5rem 0; color: var(--text-secondary);">✓ ${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="plan-section">
+                        <h3>Checklist</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Water bottles (2-3L per person)</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Energy snacks and meals</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ First aid kit</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Navigation tools (GPS/map)</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Weather-appropriate clothing</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Emergency contact information</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Headlamp/flashlight</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);">☐ Sunscreen and hat</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Scroll to plan result
+            planResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `discover.html?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', WaypointApp.toggleTheme);
+        }
+    </script>
+</body>
+</html>

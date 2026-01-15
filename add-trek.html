@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Your Trek - Waypoint</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L20 12L30 14L22 22L24 32L16 26L8 32L10 22L2 14L12 12L16 2Z" fill="currentColor"/>
+                    </svg>
+                    <span>Waypoint</span>
+                </div>
+            </div>
+            <div class="nav-center">
+                <div class="search-bar">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" fill="currentColor"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search treks...">
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-btn" onclick="window.location.href='discover.html'">Discover</button>
+                <button class="nav-btn" onclick="window.location.href='add-trek.html'">Add your treks</button>
+                <button class="nav-btn" onclick="window.location.href='plan-trek.html'">Plan a trek</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <div id="authSection"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <h1 class="page-title">Add Your Trek</h1>
+        
+        <div class="form-container">
+            <form id="addTrekForm">
+                <div class="form-group">
+                    <label for="trekName">Trek Name *</label>
+                    <input type="text" id="trekName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekLocation">Location *</label>
+                    <input type="text" id="trekLocation" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trekDate">Date of Trek *</label>
+                        <input type="date" id="trekDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trekStartTime">Start Time *</label>
+                        <input type="time" id="trekStartTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trekEndTime">End Time *</label>
+                        <input type="time" id="trekEndTime" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekLevel">Difficulty Level (1-10) *</label>
+                    <div class="range-input">
+                        <input type="range" id="trekLevel" min="1" max="10" value="5" required>
+                        <span class="range-value" id="levelValue">5</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekDistance">Distance (km) *</label>
+                    <input type="number" id="trekDistance" step="0.1" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekElevation">Elevation (m) *</label>
+                    <input type="number" id="trekElevation" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekDescription">Description</label>
+                    <textarea id="trekDescription" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="gpxFile">Upload GPX File</label>
+                    <div class="file-upload">
+                        <input type="file" id="gpxFile" accept=".gpx">
+                        <label for="gpxFile" class="file-upload-label">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M9 0C4.03 0 0 4.03 0 9C0 13.97 4.03 18 9 18C13.97 18 18 13.97 18 9C18 4.03 13.97 0 9 0ZM9 16C5.13 16 2 12.87 2 9C2 5.13 5.13 2 9 2C12.87 2 16 5.13 16 9C16 12.87 12.87 16 9 16ZM9.5 4H8.5V8.5H4V9.5H8.5V14H9.5V9.5H14V8.5H9.5V4Z" fill="currentColor"/>
+                            </svg>
+                            Choose GPX File
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="trekImage">Upload Image</label>
+                    <div class="file-upload">
+                        <input type="file" id="trekImage" accept="image/*">
+                        <label for="trekImage" class="file-upload-label">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M9 0C4.03 0 0 4.03 0 9C0 13.97 4.03 18 9 18C13.97 18 18 13.97 18 9C18 4.03 13.97 0 9 0ZM9 16C5.13 16 2 12.87 2 9C2 5.13 5.13 2 9 2C12.87 2 16 5.13 16 9C16 12.87 12.87 16 9 16ZM9.5 4H8.5V8.5H4V9.5H8.5V14H9.5V9.5H14V8.5H9.5V4Z" fill="currentColor"/>
+                            </svg>
+                            Choose Image
+                        </label>
+                    </div>
+                    <img id="imagePreview" style="max-width: 300px; margin-top: 1rem; border-radius: 8px; display: none;" alt="Preview">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Add Trek</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        WaypointApp.loadData();
+        WaypointApp.checkAuth();
+        WaypointApp.updateAuthUI();
+
+        // Check if user is logged in
+        if (!WaypointApp.AppState.currentUser) {
+            alert('Please log in to add treks');
+            window.location.href = 'auth.html';
+        }
+
+        // Difficulty level display
+        const levelInput = document.getElementById('trekLevel');
+        const levelValue = document.getElementById('levelValue');
+        levelInput.addEventListener('input', (e) => {
+            levelValue.textContent = e.target.value;
+        });
+
+        // Image preview
+        const imageInput = document.getElementById('trekImage');
+        const imagePreview = document.getElementById('imagePreview');
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        const form = document.getElementById('addTrekForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('trekName').value;
+            const location = document.getElementById('trekLocation').value;
+            const date = document.getElementById('trekDate').value;
+            const startTime = document.getElementById('trekStartTime').value;
+            const endTime = document.getElementById('trekEndTime').value;
+            const level = parseInt(document.getElementById('trekLevel').value);
+            const distance = parseFloat(document.getElementById('trekDistance').value);
+            const elevation = parseInt(document.getElementById('trekElevation').value);
+            const description = document.getElementById('trekDescription').value;
+            const gpxFile = document.getElementById('gpxFile').files[0];
+            const imageFile = document.getElementById('trekImage').files[0];
+
+            // Get coordinates from location (simplified - in real app, use geocoding API)
+            const coordinates = getCoordinatesFromLocation(location);
+
+            // Process GPX file
+            let gpxData = null;
+            if (gpxFile) {
+                gpxData = await parseGPXFile(gpxFile);
+            }
+
+            // Process image
+            let imageUrl = null;
+            if (imageFile) {
+                imageUrl = await getImageDataUrl(imageFile);
+            }
+
+            const newTrek = {
+                id: Date.now(),
+                name,
+                location,
+                coordinates,
+                distance,
+                elevation,
+                difficulty: level,
+                description,
+                date,
+                startTime,
+                endTime,
+                gpxData,
+                image: imageUrl,
+                userId: WaypointApp.AppState.currentUser.id
+            };
+
+            WaypointApp.AppState.userTreks.push(newTrek);
+            WaypointApp.saveData();
+
+            alert('Trek added successfully!');
+            window.location.href = 'discover.html';
+        });
+
+        function getCoordinatesFromLocation(location) {
+            // Simplified geocoding - in real app, use a geocoding service
+            // For now, return approximate coordinates for India
+            return [20.5937, 78.9629];
+        }
+
+        function parseGPXFile(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const text = e.target.result;
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(text, 'text/xml');
+                    const trkpts = xml.querySelectorAll('trkpt');
+                    const coordinates = Array.from(trkpts).map(pt => [
+                        parseFloat(pt.getAttribute('lat')),
+                        parseFloat(pt.getAttribute('lon'))
+                    ]);
+                    resolve({ coordinates });
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        function getImageDataUrl(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `discover.html?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', WaypointApp.toggleTheme);
+        }
+    </script>
+</body>
+</html>

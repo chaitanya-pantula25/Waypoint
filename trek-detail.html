@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trek Details - Waypoint</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L20 12L30 14L22 22L24 32L16 26L8 32L10 22L2 14L12 12L16 2Z" fill="currentColor"/>
+                    </svg>
+                    <span>Waypoint</span>
+                </div>
+            </div>
+            <div class="nav-center">
+                <div class="search-bar">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" fill="currentColor"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search treks...">
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-btn" onclick="window.location.href='discover.html'">Discover</button>
+                <button class="nav-btn" onclick="window.location.href='add-trek.html'">Add your treks</button>
+                <button class="nav-btn" onclick="window.location.href='plan-trek.html'">Plan a trek</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <div id="authSection"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <button class="btn btn-secondary" onclick="window.location.href='discover.html'" style="margin-bottom: 1rem;">← Back to Discover</button>
+        
+        <div id="trekDetailContent">
+            <!-- Content will be populated here -->
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+    <script>
+        WaypointApp.loadData();
+        WaypointApp.checkAuth();
+        WaypointApp.updateAuthUI();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const trekId = parseInt(urlParams.get('id'));
+
+        if (!trekId) {
+            window.location.href = 'discover.html';
+        }
+
+        const trek = WaypointApp.getTrekById(trekId);
+
+        if (!trek) {
+            document.getElementById('trekDetailContent').innerHTML = '<p>Trek not found</p>';
+        } else {
+            renderTrekDetail(trek);
+        }
+
+        function renderTrekDetail(trek) {
+            const isCompleted = WaypointApp.AppState.completedTreks.includes(trek.id);
+            
+            const content = `
+                <div class="trek-detail">
+                    <div class="trek-detail-info">
+                        <div class="trek-detail-header">
+                            <h1>${trek.name}</h1>
+                            <p style="color: var(--text-secondary); font-size: 1.1rem;">${trek.location}</p>
+                        </div>
+                        
+                        <div class="trek-detail-stats">
+                            <div class="stat-card">
+                                <div class="stat-label">Distance</div>
+                                <div class="stat-value">${trek.distance} km</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Elevation</div>
+                                <div class="stat-value">${trek.elevation} m</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Difficulty</div>
+                                <div class="stat-value">${trek.difficulty}/10</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Status</div>
+                                <div class="stat-value">${isCompleted ? '✓ Completed' : 'Not Completed'}</div>
+                            </div>
+                        </div>
+
+                        <div style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
+                            <h3 style="margin-bottom: 1rem; color: var(--text);">Description</h3>
+                            <p style="color: var(--text-secondary); line-height: 1.8;">${trek.description || 'No description available.'}</p>
+                        </div>
+
+                        <div class="trek-actions">
+                            <button class="btn btn-primary" id="markCompletedBtn" ${isCompleted ? 'disabled' : ''}>
+                                ${isCompleted ? '✓ Already Completed' : 'Mark as Completed'}
+                            </button>
+                            <button class="btn btn-secondary" id="downloadGPXBtn">Download GPX</button>
+                        </div>
+                    </div>
+                    <div class="trek-detail-map">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('trekDetailContent').innerHTML = content;
+
+            // Initialize map
+            const map = L.map('map').setView(trek.coordinates, 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Add marker
+            const marker = L.marker(trek.coordinates).addTo(map);
+            marker.bindPopup(`
+                <strong>${trek.name}</strong><br>
+                Distance: ${trek.distance} km<br>
+                Elevation: ${trek.elevation} m
+            `).openPopup();
+
+            // Draw route if available
+            if (trek.gpxData) {
+                const route = L.polyline(trek.gpxData.coordinates, {
+                    color: '#00A8FF',
+                    weight: 4,
+                    opacity: 0.7
+                }).addTo(map);
+                map.fitBounds(route.getBounds());
+            } else {
+                // Create a simple circular route visualization
+                const circle = L.circle(trek.coordinates, {
+                    radius: 5000,
+                    color: '#00A8FF',
+                    fillColor: '#00A8FF',
+                    fillOpacity: 0.1
+                }).addTo(map);
+            }
+
+            // Mark as completed button
+            const markCompletedBtn = document.getElementById('markCompletedBtn');
+            if (markCompletedBtn && !isCompleted) {
+                markCompletedBtn.addEventListener('click', () => {
+                    if (WaypointApp.AppState.currentUser) {
+                        WaypointApp.markTrekCompleted(trek.id);
+                        markCompletedBtn.textContent = '✓ Already Completed';
+                        markCompletedBtn.disabled = true;
+                        alert('Trek marked as completed!');
+                    } else {
+                        alert('Please log in to mark treks as completed');
+                        window.location.href = 'auth.html';
+                    }
+                });
+            }
+
+            // Download GPX button
+            const downloadGPXBtn = document.getElementById('downloadGPXBtn');
+            if (downloadGPXBtn) {
+                downloadGPXBtn.addEventListener('click', () => {
+                    if (trek.gpxData) {
+                        const gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Waypoint">
+    <trk>
+        <name>${trek.name}</name>
+        <trkseg>
+            ${trek.gpxData.coordinates.map(coord => 
+                `<trkpt lat="${coord[0]}" lon="${coord[1]}"></trkpt>`
+            ).join('\n            ')}
+        </trkseg>
+    </trk>
+</gpx>`;
+                        const blob = new Blob([gpxContent], { type: 'application/xml' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    } else {
+                        alert('GPX file not available for this trek');
+                    }
+                });
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `discover.html?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', WaypointApp.toggleTheme);
+        }
+    </script>
+</body>
+</html>
