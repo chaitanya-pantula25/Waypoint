@@ -14,9 +14,7 @@
         <div class="nav-container">
             <div class="nav-left">
                 <div class="logo" onclick="window.location.href='index.html'">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <path d="M16 2L20 12L30 14L22 22L24 32L16 26L8 32L10 22L2 14L12 12L16 2Z" fill="currentColor"/>
-                    </svg>
+                    <img src="logo.png" alt="Waypoint Logo" class="nav-logo-img">
                     <span>Waypoint</span>
                 </div>
             </div>
@@ -254,12 +252,6 @@
                 }
             }
         });
-
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', WaypointApp.toggleTheme);
-        }
     </script>
 </body>
 </html>

@@ -15,10 +15,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-left">
-                <div class="logo">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <path d="M16 2L20 12L30 14L22 22L24 32L16 26L8 32L10 22L2 14L12 12L16 2Z" fill="currentColor"/>
-                    </svg>
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <img src="logo.png" alt="Waypoint Logo" class="nav-logo-img">
                     <span>Waypoint</span>
                 </div>
             </div>
@@ -58,10 +56,7 @@
         </div>
         <div class="hero-image">
             <div class="hero-placeholder">
-                <svg width="400" height="300" viewBox="0 0 400 300" fill="none">
-                    <rect width="400" height="300" fill="var(--bg-secondary)"/>
-                    <path d="M200 50L250 150L200 250L150 150L200 50Z" fill="var(--primary)" opacity="0.3"/>
-                </svg>
+                <img src = "logo.png" alt="Hero Image Placeholder" class="hero-img">
             </div>
         </div>
     </section>
@@ -70,17 +65,23 @@
     <section class="features">
         <div class="container">
             <div class="feature-card">
-                <div class="feature-icon">🗺️</div>
+                <div class="feature-icon">
+                  <img src ="interactive_maps.png" alt="Interactive Maps Icon" class="feature-img" style="height: 90px; width: 90px;">
+                </div>
                 <h3>Interactive Maps</h3>
                 <p>Explore treks with detailed maps and accurate locations</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
+                <div class="feature-icon">
+                    <img src ="track_progess.png" alt="Track Progress Icon" class="feature-img" style="height: 90px; width: 90px;">
+                </div>
                 <h3>Track Progress</h3>
                 <p>Monitor your trekking statistics and achievements</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📥</div>
+                <div class="feature-icon">
+                    <img src ="gpx_downloads.png" alt="GPX Downloads Icon" class="feature-img" style="height: 90px; width: 90px;">
+                </div>
                 <h3>GPX Downloads</h3>
                 <p>Download trail files for your navigation devices</p>
             </div>

@@ -1,11 +1,11 @@
 :root {
-    --primary: #00A8FF;
-    --primary-dark: #0091E6;
+    --primary: #7AB800;
+    --primary-dark: #5F8F00;
     --secondary: #FF6B6B;
     --bg: #FFFFFF;
-    --bg-secondary: #F8F9FA;
+    --bg-secondary: #F5F7F7;
     --bg-tertiary: #E9ECEF;
-    --text: #212529;
+    --text: #2D3132;
     --text-secondary: #6C757D;
     --border: #DEE2E6;
     --shadow: rgba(0, 0, 0, 0.1);
@@ -13,8 +13,8 @@
 }
 
 [data-theme="dark"] {
-    --primary: #00A8FF;
-    --primary-dark: #0091E6;
+    --primary: #7AB800;
+    --primary-dark: #5F8F00;
     --secondary: #FF6B6B;
     --bg: #1A1A1A;
     --bg-secondary: #2D2D2D;
@@ -37,6 +37,7 @@ body {
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.6;
+    font-size: 16px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -48,13 +49,19 @@ body {
 
 /* Navbar */
 .navbar {
-    background-color: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E9E9;
+    height: 64px;
+    padding: 0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px var(--shadow);
+    box-shadow: none;
+}
+
+[data-theme="dark"] .navbar {
+    background-color: #1A1A1A;
+    border-bottom: 1px solid #404040;
 }
 
 .nav-container {
@@ -75,11 +82,19 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
+    cursor: pointer;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);
     text-decoration: none;
+}
+
+.nav-logo-img {
+    height: 10%;
+    width: 10%;
+    display: block;
+    object-fit: contain;
 }
 
 .logo svg {
@@ -141,7 +156,7 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     font-family: inherit;
 }
 
@@ -160,7 +175,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .theme-toggle:hover {
@@ -174,7 +189,7 @@ body {
     cursor: pointer;
     border: 2px solid var(--border);
     object-fit: cover;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .profile-photo:hover {
@@ -191,6 +206,20 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
 }
 
 .hero-content {
@@ -201,8 +230,9 @@ body {
 
 .hero-title {
     font-size: 3.5rem;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.2;
+    letter-spacing: -0.02em;
     color: var(--text);
 }
 
@@ -224,7 +254,7 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     font-family: inherit;
 }
 
@@ -252,7 +282,9 @@ body {
 
 .hero-image {
     display: flex;
-    justify-content: center;
+    width: 10px;
+    height: 15px;
+    justify-content: left;
     align-items: center;
 }
 
@@ -279,7 +311,7 @@ body {
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 2px 8px var(--shadow);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .feature-card:hover {
@@ -311,8 +343,9 @@ body {
 
 .page-title {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 2rem;
+    letter-spacing: -0.02em;
     color: var(--text);
 }
 
@@ -343,7 +376,7 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     font-family: inherit;
     margin-bottom: -2px;
 }
@@ -413,7 +446,7 @@ body {
     background-color: var(--bg);
     color: var(--text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .file-upload-label:hover {
@@ -449,17 +482,16 @@ body {
 
 .trek-card {
     background-color: var(--bg-secondary);
-    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.5rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .trek-card:hover {
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px var(--shadow);
-    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .trek-card h3 {
@@ -494,7 +526,7 @@ body {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     font-family: inherit;
     font-weight: 500;
 }
