@@ -79,6 +79,26 @@ body {
     align-items: center;
 }
 
+/* Calendar icon color */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(46deg) brightness(118%) contrast(119%);
+}
+
+/* Dark Mode Calendar icon color */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Clock icon color */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(46deg) brightness(118%) contrast(119%);
+}
+
+/* Dark Mode Clock icon color */
+[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 .logo {
     display: flex;
     align-items: center;
@@ -176,6 +196,32 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Base icon styling */
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Logic to toggle visibility */
+[data-theme="light"] .sun-icon {
+    display: none;
+}
+
+[data-theme="light"] .moon-icon {
+    display: block;
+    color: #333;
+}
+
+[data-theme="dark"] .sun-icon {
+    display: block;
+    color: #FFD700; /* Gold color for sun in dark mode */
+}
+
+[data-theme="dark"] .moon-icon {
+    display: none;
 }
 
 .theme-toggle:hover {
@@ -413,6 +459,7 @@ body {
     font-size: 1rem;
     font-family: inherit;
     transition: all 0.2s ease;
+    
 }
 
 .form-group input:focus {

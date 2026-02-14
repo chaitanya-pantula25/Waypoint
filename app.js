@@ -72,7 +72,8 @@ function initializeSampleTreks() {
             difficulty: 6,
             description: "A stunning alpine valley filled with colorful flowers during monsoon season.",
             image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-            gpxData: null
+            gpxData: null,
+            gpxFile: 'gpx/valley_of_flowers.gpx'
         },
         {
             id: 2,
@@ -84,7 +85,8 @@ function initializeSampleTreks() {
             difficulty: 7,
             description: "A beautiful crossover trek from Manali to Spiti Valley.",
             image: "https://images.unsplash.com/photo-1464822759844-d150ad8496ec?w=800",
-            gpxData: null
+            gpxData: null,
+            gpxFile: 'gpx/hampta_pass.gpx'
         },
         {
             id: 3,
@@ -96,7 +98,8 @@ function initializeSampleTreks() {
             difficulty: 5,
             description: "A popular winter trek with stunning snow-covered landscapes.",
             image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800",
-            gpxData: null
+            gpxData: null,
+            gpxFile: 'gpx/kedarkantha.gpx'
         },
         {
             id: 4,
@@ -482,6 +485,36 @@ function getUserStatistics() {
     };
 }
 
+// GPX Parsing Function
+async function loadGpxData(filePath) {
+    try {
+        const response = await fetch(filePath);
+        if (!response.ok) {
+            throw new Error(`Failed to load GPX file: ${response.statusText}`);
+        }
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+        
+        // Extract all track points
+        const trkpts = xmlDoc.querySelectorAll('trkpt');
+        const coordinates = [];
+        
+        trkpts.forEach(trkpt => {
+            const lat = parseFloat(trkpt.getAttribute('lat'));
+            const lon = parseFloat(trkpt.getAttribute('lon'));
+            if (!isNaN(lat) && !isNaN(lon)) {
+                coordinates.push([lat, lon]);
+            }
+        });
+        
+        return coordinates;
+    } catch (error) {
+        console.error('Error loading GPX file:', error);
+        return null;
+    }
+}
+
 // Export for use in other pages
 if (typeof window !== 'undefined') {
     window.WaypointApp = {
@@ -495,6 +528,7 @@ if (typeof window !== 'undefined') {
         getUserStatistics,
         updateAuthUI,
         checkAuth,
-        toggleTheme
+        toggleTheme,
+        loadGpxData
     };
 }

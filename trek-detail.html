@@ -138,22 +138,65 @@
             `).openPopup();
 
             // Draw route if available
-            if (trek.gpxData) {
-                const route = L.polyline(trek.gpxData.coordinates, {
-                    color: '#00A8FF',
-                    weight: 4,
-                    opacity: 0.7
-                }).addTo(map);
-                map.fitBounds(route.getBounds());
-            } else {
-                // Create a simple circular route visualization
-                const circle = L.circle(trek.coordinates, {
-                    radius: 5000,
-                    color: '#00A8FF',
-                    fillColor: '#00A8FF',
-                    fillOpacity: 0.1
-                }).addTo(map);
+            async function drawTrekRoute() {
+                if (trek.gpxFile) {
+                    try {
+                        const coordinates = await WaypointApp.loadGpxData(trek.gpxFile);
+                        if (coordinates && coordinates.length > 0) {
+                            const route = L.polyline(coordinates, {
+                                color: '#7AB800',
+                                weight: 5,
+                                smoothFactor: 1,
+                                opacity: 0.8
+                            }).addTo(map);
+                            map.fitBounds(route.getBounds(), {
+                                padding: [50, 50]
+                            });
+                        } else {
+                            // Fallback if GPX parsing failed
+                            const circle = L.circle(trek.coordinates, {
+                                radius: 5000,
+                                color: '#7AB800',
+                                fillColor: '#7AB800',
+                                fillOpacity: 0.1,
+                                weight: 2
+                            }).addTo(map);
+                        }
+                    } catch (error) {
+                        console.error('Error loading GPX:', error);
+                        // Fallback if fetch fails
+                        const circle = L.circle(trek.coordinates, {
+                            radius: 5000,
+                            color: '#7AB800',
+                            fillColor: '#7AB800',
+                            fillOpacity: 0.1,
+                            weight: 2
+                        }).addTo(map);
+                    }
+                } else if (trek.gpxData) {
+                    // Use existing gpxData if available
+                    const route = L.polyline(trek.gpxData.coordinates || trek.gpxData, {
+                        color: '#7AB800',
+                        weight: 5,
+                        smoothFactor: 1,
+                        opacity: 0.8
+                    }).addTo(map);
+                    map.fitBounds(route.getBounds(), {
+                        padding: [50, 50]
+                    });
+                } else {
+                    // Create a simple circular route visualization
+                    const circle = L.circle(trek.coordinates, {
+                        radius: 5000,
+                        color: '#7AB800',
+                        fillColor: '#7AB800',
+                        fillOpacity: 0.1,
+                        weight: 2
+                    }).addTo(map);
+                }
             }
+            
+            drawTrekRoute();
 
             // Mark as completed button
             const markCompletedBtn = document.getElementById('markCompletedBtn');
@@ -174,14 +217,37 @@
             // Download GPX button
             const downloadGPXBtn = document.getElementById('downloadGPXBtn');
             if (downloadGPXBtn) {
-                downloadGPXBtn.addEventListener('click', () => {
-                    if (trek.gpxData) {
+                downloadGPXBtn.addEventListener('click', async () => {
+                    // If trek has a GPX file, download it directly
+                    if (trek.gpxFile) {
+                        try {
+                            const response = await fetch(trek.gpxFile);
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch GPX file');
+                            }
+                            const blob = await response.blob();
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                        } catch (error) {
+                            console.error('Error downloading GPX file:', error);
+                            alert('Failed to download GPX file');
+                        }
+                        return;
+                    }
+
+                    // If trek has gpxData with coordinates, generate GPX
+                    if (trek.gpxData && trek.gpxData.coordinates) {
+                        const coordinates = trek.gpxData.coordinates;
                         const gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Waypoint">
     <trk>
         <name>${trek.name}</name>
         <trkseg>
-            ${trek.gpxData.coordinates.map(coord => 
+            ${coordinates.map(coord => 
                 `<trkpt lat="${coord[0]}" lon="${coord[1]}"></trkpt>`
             ).join('\n            ')}
         </trkseg>
