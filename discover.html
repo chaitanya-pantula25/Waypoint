@@ -26,6 +26,7 @@
                     </svg>
                     <input type="text" id="searchInput" placeholder="Search treks...">
                 </div>
+                <button class="btn-location" id="locationBtn">📍 Find Nearest</button>
             </div>
             <div class="nav-right">
                 <button class="nav-btn" onclick="window.location.href='discover.html'">Discover</button>
@@ -59,6 +60,8 @@
         let map;
         let markers = [];
         let currentRoute = null;
+        let userLocation = null;
+        let userLocationMarker = null;
 
         WaypointApp.loadData();
         WaypointApp.checkAuth();
@@ -73,9 +76,19 @@
                 maxZoom: 19
             }).addTo(map);
 
-            // Add markers for all treks
+            // Add markers for all treks initially
             const allTreks = WaypointApp.getAllTreks();
-            allTreks.forEach(trek => {
+            setMarkersForTreks(allTreks);
+            updateUserLocationOnMap();
+        }
+
+        function setMarkersForTreks(treks) {
+            if (!map) return;
+
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            treks.forEach(trek => {
                 const marker = L.marker(trek.coordinates).addTo(map);
                 marker.bindPopup(`
                     <strong>${trek.name}</strong><br>
@@ -88,7 +101,8 @@
         }
 
         // Render trek list
-        function renderTrekList(treks) {
+        function renderTrekList(treks, options = {}) {
+            const { showDistance = false } = options;
             const trekList = document.getElementById('trekList');
             trekList.innerHTML = '';
 
@@ -119,10 +133,15 @@
                             <span>⭐</span>
                             <span>Difficulty: ${trek.difficulty}/10</span>
                         </div>
+                        ${showDistance && Number.isFinite(trek.distanceFromUserKm || NaN) ? `
+                        <div class="distance-badge">
+                            ${Math.round(trek.distanceFromUserKm)} km away
+                        </div>
+                        ` : ''}
                     </div>
                     <div class="trek-card-actions">
                         <button class="btn-small btn-small-primary view-map-btn" data-trek-id="${trek.id}">View on map</button>
-                        <button class="btn-small btn-small-secondary download-gpx-btn" data-trek-id="${trek.id}">Download GPX</button>
+                        <button class="btn-small btn-small-secondary download-gpx-btn" data-trek-id="${trek.id}" onclick="downloadGpx(${trek.id})">Download GPX</button>
                     </div>
                 `;
 
@@ -138,13 +157,6 @@
                 viewMapBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     focusTrekOnMap(trek);
-                });
-
-                // Download GPX button
-                const downloadBtn = card.querySelector('.download-gpx-btn');
-                downloadBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    downloadGPX(trek);
                 });
 
                 trekList.appendChild(card);
@@ -225,66 +237,22 @@
             map.setView(trek.coordinates, 12);
         }
 
-        // Download GPX
-        async function downloadGPX(trek) {
-            // If trek has a GPX file, download it directly
-            if (trek.gpxFile) {
-                try {
-                    const response = await fetch(trek.gpxFile);
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch GPX file');
-                    }
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                } catch (error) {
-                    console.error('Error downloading GPX file:', error);
-                    alert('Failed to download GPX file');
-                }
-                return;
-            }
-
-            // If trek has gpxData with coordinates, generate GPX
-            if (trek.gpxData && trek.gpxData.coordinates) {
-                const gpxContent = generateGPX(trek);
-                const blob = new Blob([gpxContent], { type: 'application/xml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
-                a.click();
-                URL.revokeObjectURL(url);
-                return;
-            }
-
-            alert('GPX file not available for this trek');
-        }
-
-        function generateGPX(trek) {
-            const coordinates = trek.gpxData.coordinates || [];
-            return `<?xml version="1.0" encoding="UTF-8"?>
-<gpx version="1.1" creator="Waypoint">
-    <trk>
-        <name>${trek.name}</name>
-        <trkseg>
-            ${coordinates.map(coord => 
-                `<trkpt lat="${coord[0]}" lon="${coord[1]}"></trkpt>`
-            ).join('\n            ')}
-        </trkseg>
-    </trk>
-</gpx>`;
-        }
-
-        // Search functionality
+        // Search + URL param handling
         const searchInput = document.getElementById('searchInput');
         const urlParams = new URLSearchParams(window.location.search);
         const searchQuery = urlParams.get('search');
+        const urlLat = urlParams.get('lat');
+        const urlLon = urlParams.get('lon');
+        const urlNearest = urlParams.get('nearest');
 
-        if (searchQuery) {
+        const hasValidUrlLocation = urlLat && urlLon && urlNearest === 'true' &&
+            !isNaN(parseFloat(urlLat)) && !isNaN(parseFloat(urlLon));
+
+        if (hasValidUrlLocation) {
+            const lat = parseFloat(urlLat);
+            const lon = parseFloat(urlLon);
+            showNearestTreksFrom(lat, lon);
+        } else if (searchQuery) {
             searchInput.value = searchQuery;
             const filteredTreks = WaypointApp.searchTreks(searchQuery);
             renderTrekList(filteredTreks);
@@ -312,6 +280,114 @@
                 }
             }
         });
+
+        function updateUserLocationOnMap() {
+            if (!map || !userLocation) return;
+
+            if (userLocationMarker) {
+                map.removeLayer(userLocationMarker);
+            }
+
+            userLocationMarker = L.marker([userLocation.lat, userLocation.lon], {
+                icon: L.divIcon({
+                    className: 'user-location-marker',
+                    html: '<div class="user-location-pulse"></div><div class="user-location-dot"></div>',
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map).bindPopup('You are here');
+
+            map.setView([userLocation.lat, userLocation.lon], 8);
+        }
+
+        function showNearestTreksFrom(lat, lon) {
+            userLocation = { lat, lon };
+            updateUserLocationOnMap();
+
+            const allTreks = WaypointApp.getAllTreks();
+
+            const treksWithDistance = allTreks.map(trek => {
+                const startLat = typeof trek.startLat === 'number' ? trek.startLat :
+                    Array.isArray(trek.coordinates) ? trek.coordinates[0] : null;
+                const startLon = typeof trek.startLon === 'number' ? trek.startLon :
+                    Array.isArray(trek.coordinates) ? trek.coordinates[1] : null;
+
+                if (startLat != null && startLon != null) {
+                    const distanceKm = WaypointApp.calculateDistance(
+                        lat,
+                        lon,
+                        startLat,
+                        startLon
+                    );
+                    return {
+                        ...trek,
+                        distanceFromUserKm: distanceKm
+                    };
+                }
+
+                return {
+                    ...trek,
+                    distanceFromUserKm: Infinity
+                };
+            });
+
+            // Filter to 250km radius and sort nearest first
+            const withinRadius = treksWithDistance
+                .filter(t => t.distanceFromUserKm <= 250)
+                .sort((a, b) => a.distanceFromUserKm - b.distanceFromUserKm);
+
+            if (withinRadius.length > 0) {
+                renderTrekList(withinRadius, { showDistance: true });
+                setMarkersForTreks(withinRadius);
+            } else {
+                renderTrekList([], { showDistance: true });
+                setMarkersForTreks([]);
+            }
+        }
+
+        // Location-based sorting
+        const locationBtn = document.getElementById('locationBtn');
+
+        if (locationBtn) {
+            if (!('geolocation' in navigator)) {
+                locationBtn.addEventListener('click', () => {
+                    alert('Geolocation is not supported by your browser.');
+                });
+            } else {
+                locationBtn.addEventListener('click', () => {
+                    const originalText = locationBtn.textContent;
+                    locationBtn.disabled = true;
+                    locationBtn.classList.add('loading');
+                    locationBtn.textContent = 'Locating...';
+
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            showNearestTreksFrom(latitude, longitude);
+
+                            locationBtn.disabled = false;
+                            locationBtn.classList.remove('loading');
+                            locationBtn.textContent = originalText;
+                        },
+                        (error) => {
+                            locationBtn.disabled = false;
+                            locationBtn.classList.remove('loading');
+                            locationBtn.textContent = originalText;
+
+                            if (error.code === error.PERMISSION_DENIED) {
+                                alert('We could not access your location. Please allow location access in your browser and try again.');
+                            } else {
+                                alert('Unable to fetch your location right now. Please try again in a moment.');
+                            }
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000
+                        }
+                    );
+                });
+            }
+        }
 
         // Initialize
         initMap();

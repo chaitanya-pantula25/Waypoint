@@ -1,0 +1,158 @@
+Understood. I have strictly filtered the data to match only the 22 specific treks you provided, ensuring the "difficult stretches" and itineraries align with reputable sources like IndiaHikes and Bikat Adventures.
+
+Copy the content below into your trek-source-data.txt file.
+
+WAYPOINT OFFICIAL TREK DATA (22 TREKS)
+1. Valley of Flowers (Uttarakhand)
+Elevation Gain: ~3,300 ft
+
+Brief Description: A UNESCO World Heritage site known for its alpine flora. The most difficult stretch is the steep 6km ascent from Ghangaria to Hemkund Sahib at 14,107 ft, where the air thins significantly.
+
+Itinerary: Day 1: Drive Dehradun to Govindghat. Day 2: Trek to Ghangaria (13km). Day 3: Explore Valley of Flowers. Day 4: Steep climb to Hemkund Sahib. Day 5: Descend to Govindghat.
+
+2. Hampta Pass (Himachal Pradesh)
+Elevation Gain: ~3,500 ft
+
+Brief Description: A crossover trek from the lush Kullu valley to the desert of Lahaul. The most difficult stretch is the pass crossing on Day 3, involving a steep climb through snow and a sharp, rocky descent to Shea Goru.
+
+Itinerary: Day 1: Drive Manali to Jobra; Trek to Chikka. Day 2: Trek to Balu Ka Ghera. Day 3: Cross Hampta Pass to Shea Goru. Day 4: Trek to Chhatru; Visit Chandratal Lake. Day 5: Drive back to Manali.
+
+3. Kedarkantha (Uttarakhand)
+Elevation Gain: ~6,000 ft total
+
+Brief Description: Famous for its 360-degree summit views. The most difficult stretch is the midnight/early morning summit push in sub-zero temperatures over steep, icy slopes.
+
+Itinerary: Day 1: Drive Dehradun to Sankri. Day 2: Trek to Juda Ka Talab. Day 3: Trek to Kedarkantha Base. Day 4: Summit Push (12,500 ft); Descend to Hargaon. Day 5: Descend to Sankri.
+
+4. Roopkund (Uttarakhand)
+Elevation Gain: ~8,000 ft
+
+Brief Description: Known for the mystery "Skeleton Lake." The most difficult stretch is the trek from Bhagwabasa to Roopkund (15,750 ft), a steep 4km climb on snow with very low oxygen levels.
+
+Itinerary: Day 1: Drive to Lohajung. Day 2: Trek to Didna Village. Day 3: Trek to Ali Bugyal. Day 4: Trek to Patar Nachuni. Day 5: Trek to Bhagwabasa. Day 6: Summit Roopkund; Descend to Bedni Bugyal.
+
+5. Sandakphu (West Bengal)
+Elevation Gain: ~5,600 ft
+
+Brief Description: Offers views of Everest and Kanchenjunga. The most difficult stretch is the relentless incline from Kalipokhri to Sandakphu, featuring steep switchbacks that test leg endurance.
+
+Itinerary: Day 1: Drive to Manebhanjan. Day 2: Trek to Tumling. Day 3: Trek to Kalipokhri. Day 4: Steep climb to Sandakphu. Day 5: Trek to Phalut. Day 6: Descend to Gorkhey.
+
+6. Triund (Himachal Pradesh)
+Elevation Gain: ~2,500 ft
+
+Brief Description: A classic beginner trek in the Dhauladhars. The most difficult stretch is the "22 curves" just before reaching the top, where the trail becomes significantly steeper.
+
+Itinerary: Day 1: Trek McLeodganj to Triund (9km). Day 2: Optional walk to Snowline; Descend to McLeodganj.
+
+7. Chadar Trek (Ladakh)
+Elevation Gain: Minimal (Flat walk), but extreme conditions.
+
+Brief Description: A trek on the frozen Zanskar River. The most difficult stretch is navigating "Nerak" waterfall area where the ice (chadar) can be unstable or non-existent, forcing climbs over icy rocks.
+
+Itinerary: Day 1: Reach Leh (Acclimatization). Day 2-3: Medical check and local walks. Day 4: Drive to Shingra Koma; Trek to Gyalpo. Day 5: Trek to Tibb Cave. Day 6: Trek to Nerak (Frozen Waterfall). Day 7-9: Return trek to Leh.
+
+8. Goechala (Sikkim)
+Elevation Gain: ~9,500 ft
+
+Brief Description: A grand trek to Kanchenjunga base. The most difficult stretch is the 1 AM summit push from Lamuney to View Point 1 (15,100 ft) due to extreme cold and thin air.
+
+Itinerary: Day 1: Reach Yuksom. Day 2: Trek to Sachen. Day 3: Trek to Tsokha. Day 4: Trek to Dzongri. Day 5: Trek to Lamuney. Day 6: Summit View Point; Descend to Kokechurang.
+
+9. Har Ki Dun (Uttarakhand)
+Elevation Gain: ~3,800 ft
+
+Brief Description: A beautiful cradle-shaped valley. The most difficult stretch is the long, optional trek to Jaundhar Glacier over unstable moraine and scree.
+
+Itinerary: Day 1: Drive to Sankri. Day 2: Trek to Pauni Garaat. Day 3: Trek to Kalkatiyadhar. Day 4: Trek to Har Ki Dun and Jaundhar Glacier. Day 5: Descend to Boslo.
+
+10. Pin Parvati Pass (Himachal Pradesh)
+Elevation Gain: ~10,000 ft
+
+Brief Description: One of India's most challenging crossovers. The most difficult stretch is the crevasse-ridden glacier traverse on the Parvati side leading to the 17,450 ft pass.
+
+Itinerary: Day 1: Barsheni to Kalga. Day 2: Kheerganga. Day 3: Tunda Bhuj. Day 4: Thakur Kuan. Day 5: Mantalai Lake. Day 6: Base Camp. Day 7: Cross Pass to Spiti.
+
+11. Nag Tibba (Uttarakhand)
+Elevation Gain: ~3,000 ft
+
+Brief Description: The highest peak in the lesser Himalayan region. The most difficult stretch is the final summit climb from the base camp, which can be slippery with snow or loose soil.
+
+Itinerary: Day 1: Drive Dehradun to Pantwari; Trek to Base Camp. Day 2: Summit Nag Tibba; Descend to Pantwari; Drive to Dehradun.
+
+12. Bhrigu Lake (Himachal Pradesh)
+Elevation Gain: ~4,200 ft
+
+Brief Description: A high-altitude glacial lake trek near Manali. The most difficult stretch is the steep, direct ascent from Gulaba to the first campsite (Rola Kholi).
+
+Itinerary: Day 1: Drive Manali to Gulaba; Trek to Rola Kholi. Day 2: Trek to Bhrigu Lake (14,000 ft) and back. Day 3: Descend to Gulaba.
+
+13. Kuari Pass (Uttarakhand)
+Elevation Gain: ~4,200 ft
+
+Brief Description: Offers unparalleled views of Nanda Devi. The most difficult stretch is the steep climb from Tali to the pass (12,516 ft) through exposed ridges.
+
+Itinerary: Day 1: Drive to Joshimath. Day 2: Trek to Gulling Top. Day 3: Trek to Tali Camp. Day 4: Cross Kuari Pass; Trek to Khullara. Day 5: Descend to Auli.
+
+14. Dayara Bugyal (Uttarakhand)
+Elevation Gain: ~4,000 ft
+
+Brief Description: One of India's most expansive high-altitude meadows. The most difficult stretch is the initial steep climb through the oak forests from Barsu to Barnala Tal.
+
+Itinerary: Day 1: Drive Dehradun to Barsu. Day 2: Trek to Barnala. Day 3: Trek to Dayara Bugyal summit (12,000 ft). Day 4: Descend to Barsu.
+
+15. Stok Kangri (Ladakh)
+Elevation Gain: ~7,000 ft from Base Camp to Peak.
+
+Brief Description: A non-technical 6,000m peak. The most difficult stretch is the 10-12 hour summit day involving a steep glacier crossing and a long, oxygen-depleted ridge walk to 20,187 ft.
+
+Itinerary: Day 1-3: Leh (Acclimatization). Day 4: Drive to Stok; Trek to Chang Ma. Day 5: Trek to Base Camp. Day 6: Training/Acclimatization. Day 7: Summit Push; Return to Base. Day 8: Descend to Stok.
+
+16. Brahmatal (Uttarakhand)
+Elevation Gain: ~4,500 ft
+
+Brief Description: A classic winter trek. The most difficult stretch is the exposed ridge walk from the lake to the Brahmatal Summit (12,250 ft) against high winds.
+
+Itinerary: Day 1: Drive to Lohajung. Day 2: Trek to Bekaltal. Day 3: Trek to Brahmatal. Day 4: Summit Push; Descend to Tilandi. Day 5: Descend to Lohajung.
+
+17. Rupin Pass (Himachal Pradesh)
+Elevation Gain: ~8,000 ft
+
+Brief Description: A legendary crossover trek. The most difficult stretch is the "Rupin Gully," a near-vertical climb through snow just below the 15,250 ft pass.
+
+Itinerary: Day 1: Drive to Dhaula. Day 2: Sewa. Day 3: Jhakha. Day 4: Lower Waterfall. Day 5: Upper Waterfall. Day 6: Cross Rupin Pass to Sangla.
+
+18. Kumara Parvatha (Karnataka)
+Elevation Gain: ~5,600 ft
+
+Brief Description: The toughest trek in South India. The most difficult stretch is the "Shesha Parvatha" ascent, which is very steep and entirely exposed to the sun.
+
+Itinerary: Day 1: Trek Kukke Subramanya to Bhattara Mane. Day 2: Summit Kumara Parvatha; Descend to base.
+
+19. Tadiandamol (Karnataka)
+Elevation Gain: ~1,500 ft
+
+Brief Description: The highest peak in Coorg. The most difficult stretch is the final, narrow incline leading to the summit which can be slippery during monsoons.
+
+Itinerary: Day 1: Trek from Kakkabe to Tadiandamol Summit and back (14km).
+
+20. Chembra Peak (Kerala)
+Elevation Gain: ~2,500 ft
+
+Brief Description: Famous for its heart-shaped lake. The most difficult stretch is the final trek from the lake to the actual peak summit (currently often restricted by forest dept).
+
+Itinerary: Day 1: Trek from Meppadi to Heart Lake and Summit (7km).
+
+21. Dzongri (Sikkim)
+Elevation Gain: ~4,000 ft
+
+Brief Description: A shorter version of the Goechala trek. The most difficult stretch is the steep, stone-step climb from Tsokha to Phedang at high altitude.
+
+Itinerary: Day 1: Yuksom. Day 2: Trek to Sachen. Day 3: Trek to Tsokha. Day 4: Trek to Dzongri Top (13,000 ft). Day 5: Descend to Yuksom.
+
+22. Markha Valley (Ladakh)
+Elevation Gain: ~6,000 ft
+
+Brief Description: A "tea-house" trek in the high desert. The most difficult stretch is crossing the Kongmaru La pass (17,060 ft) on the final day due to its steepness and altitude.
+
+Itinerary: Day 1: Leh. Day 2: Drive to Chilling; Trek to Skiu. Day 3: Markha. Day 4: Thachungtse. Day 5: Nimaling. Day 6: Cross Kongmaru La; Descend to Shang Sumdo.

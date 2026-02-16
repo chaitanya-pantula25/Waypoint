@@ -123,8 +123,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .nav-center {
     flex: 1;
-    max-width: 400px;
+    max-width: 460px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .search-bar {
@@ -159,6 +162,34 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .search-bar input::placeholder {
     color: var(--text-secondary);
+}
+
+.btn-location {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: none;
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: all 0.2s ease;
+}
+
+.btn-location:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-hover);
+}
+
+.btn-location.loading {
+    opacity: 0.8;
+    cursor: wait;
 }
 
 .nav-right {
@@ -562,6 +593,19 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     gap: 0.5rem;
 }
 
+.trek-distance-badge,
+.distance-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background-color: rgba(122, 184, 0, 0.1);
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
 .trek-card-actions {
     display: flex;
     gap: 0.5rem;
@@ -609,6 +653,53 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     height: 100%;
 }
 
+/* User location marker */
+.user-location-marker {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.user-location-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 123, 255, 0.3);
+    transform: translate(-50%, -50%) scale(0.7);
+    animation: user-location-pulse 1.5s ease-out infinite;
+}
+
+.user-location-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #007BFF;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+    transform: translate(-50%, -50%);
+}
+
+@keyframes user-location-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0.8;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
 /* Trek Detail Page */
 .trek-detail {
     display: grid;
@@ -632,6 +723,46 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+}
+
+.trek-detail-stats-compact {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.stat-card-compact {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.stat-card-compact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value-compact {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label-compact {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .stat-card {
@@ -664,6 +795,125 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     display: flex;
     gap: 1rem;
     margin-top: 2rem;
+}
+
+/* Image Gallery */
+.trek-image-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.trek-gallery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+}
+
+.trek-gallery-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px var(--shadow);
+}
+
+/* Itinerary Section */
+.itinerary-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.itinerary-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.itinerary-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.itinerary-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--primary);
+    opacity: 0.3;
+}
+
+.itinerary-item {
+    position: relative;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+}
+
+.itinerary-item:last-child {
+    padding-bottom: 0;
+}
+
+.itinerary-item::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 0.25rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid var(--bg);
+    z-index: 1;
+}
+
+.itinerary-day {
+    position: absolute;
+    left: -2.5rem;
+    top: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--bg);
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.itinerary-content {
+    background-color: var(--bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.itinerary-content:hover {
+    box-shadow: 0 2px 12px var(--shadow);
+    transform: translateX(4px);
+}
+
+.itinerary-day-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.itinerary-day-details {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* Form Pages */
@@ -877,6 +1127,41 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    .trek-detail-stats-compact {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .trek-image-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .trek-gallery-image {
+        height: 250px;
+    }
+
+    .itinerary-timeline {
+        padding-left: 1.5rem;
+    }
+
+    .itinerary-item {
+        padding-left: 1.5rem;
+    }
+
+    .itinerary-day {
+        left: -2rem;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .trek-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .trek-detail-map {
+        height: 400px;
+        order: -1;
     }
 }
 

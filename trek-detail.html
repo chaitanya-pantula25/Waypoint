@@ -74,6 +74,57 @@
         function renderTrekDetail(trek) {
             const isCompleted = WaypointApp.AppState.completedTreks.includes(trek.id);
             
+            // Build stats cards HTML
+            const statsCards = `
+                <div class="stat-card-compact">
+                    <div class="stat-icon">📏</div>
+                    <div class="stat-value-compact">${trek.distance} km</div>
+                    <div class="stat-label-compact">Distance</div>
+                </div>
+                <div class="stat-card-compact">
+                    <div class="stat-icon">⛰️</div>
+                    <div class="stat-value-compact">${trek.elevation} m</div>
+                    <div class="stat-label-compact">Elevation</div>
+                </div>
+                <div class="stat-card-compact">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value-compact">${trek.difficulty}/10</div>
+                    <div class="stat-label-compact">Difficulty</div>
+                </div>
+                <div class="stat-card-compact">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value-compact">${trek.elevationGain || 'N/A'}</div>
+                    <div class="stat-label-compact">Elevation Gain</div>
+                </div>
+            `;
+
+            // Build image gallery HTML
+            const imageGallery = trek.images && trek.images.length > 0 ? `
+                <div class="trek-image-gallery">
+                    ${trek.images.map(img => `
+                        <img src="${img}" alt="${trek.name}" class="trek-gallery-image">
+                    `).join('')}
+                </div>
+            ` : '';
+
+            // Build itinerary HTML
+            const itinerarySection = trek.itinerary && trek.itinerary.length > 0 ? `
+                <div class="itinerary-section">
+                    <h2 class="itinerary-title">Trek Itinerary</h2>
+                    <div class="itinerary-timeline">
+                        ${trek.itinerary.map(item => `
+                            <div class="itinerary-item">
+                                <div class="itinerary-day">Day ${item.day}</div>
+                                <div class="itinerary-content">
+                                    <h3 class="itinerary-day-title">${item.title}</h3>
+                                    <p class="itinerary-day-details">${item.details}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
             const content = `
                 <div class="trek-detail">
                     <div class="trek-detail-info">
@@ -82,26 +133,11 @@
                             <p style="color: var(--text-secondary); font-size: 1.1rem;">${trek.location}</p>
                         </div>
                         
-                        <div class="trek-detail-stats">
-                            <div class="stat-card">
-                                <div class="stat-label">Distance</div>
-                                <div class="stat-value">${trek.distance} km</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Elevation</div>
-                                <div class="stat-value">${trek.elevation} m</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Difficulty</div>
-                                <div class="stat-value">${trek.difficulty}/10</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Status</div>
-                                <div class="stat-value">${isCompleted ? '✓ Completed' : 'Not Completed'}</div>
-                            </div>
+                        <div class="trek-detail-stats-compact">
+                            ${statsCards}
                         </div>
 
-                        <div style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
+                        <div style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-top: 2rem;">
                             <h3 style="margin-bottom: 1rem; color: var(--text);">Description</h3>
                             <p style="color: var(--text-secondary); line-height: 1.8;">${trek.description || 'No description available.'}</p>
                         </div>
@@ -110,13 +146,16 @@
                             <button class="btn btn-primary" id="markCompletedBtn" ${isCompleted ? 'disabled' : ''}>
                                 ${isCompleted ? '✓ Already Completed' : 'Mark as Completed'}
                             </button>
-                            <button class="btn btn-secondary" id="downloadGPXBtn">Download GPX</button>
+                            <button class="btn btn-secondary" id="downloadGPXBtn" onclick="downloadGpx(${trek.id})">Download GPX</button>
                         </div>
+
+                        ${imageGallery}
                     </div>
                     <div class="trek-detail-map">
                         <div id="map"></div>
                     </div>
                 </div>
+                ${itinerarySection}
             `;
 
             document.getElementById('trekDetailContent').innerHTML = content;
@@ -214,57 +253,6 @@
                 });
             }
 
-            // Download GPX button
-            const downloadGPXBtn = document.getElementById('downloadGPXBtn');
-            if (downloadGPXBtn) {
-                downloadGPXBtn.addEventListener('click', async () => {
-                    // If trek has a GPX file, download it directly
-                    if (trek.gpxFile) {
-                        try {
-                            const response = await fetch(trek.gpxFile);
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch GPX file');
-                            }
-                            const blob = await response.blob();
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
-                            a.click();
-                            URL.revokeObjectURL(url);
-                        } catch (error) {
-                            console.error('Error downloading GPX file:', error);
-                            alert('Failed to download GPX file');
-                        }
-                        return;
-                    }
-
-                    // If trek has gpxData with coordinates, generate GPX
-                    if (trek.gpxData && trek.gpxData.coordinates) {
-                        const coordinates = trek.gpxData.coordinates;
-                        const gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
-<gpx version="1.1" creator="Waypoint">
-    <trk>
-        <name>${trek.name}</name>
-        <trkseg>
-            ${coordinates.map(coord => 
-                `<trkpt lat="${coord[0]}" lon="${coord[1]}"></trkpt>`
-            ).join('\n            ')}
-        </trkseg>
-    </trk>
-</gpx>`;
-                        const blob = new Blob([gpxContent], { type: 'application/xml' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `${trek.name.replace(/\s+/g, '_')}.gpx`;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                    } else {
-                        alert('GPX file not available for this trek');
-                    }
-                });
-            }
         }
 
         // Search functionality

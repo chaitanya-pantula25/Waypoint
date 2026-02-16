@@ -63,6 +63,7 @@
             <div class="hero-buttons">
                 <button class="btn btn-primary" id="heroDiscoverBtn">Explore Treks</button>
                 <button class="btn btn-secondary" id="heroPlanBtn">Plan Your Trek</button>
+                <button class="btn btn-secondary" id="heroNearestBtn">📍 Find Nearest Treks</button>
             </div>
         </div>
         <div class="hero-image">
@@ -101,5 +102,45 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroNearestBtn = document.getElementById('heroNearestBtn');
+
+            if (heroNearestBtn) {
+                heroNearestBtn.addEventListener('click', () => {
+                    if (!('geolocation' in navigator)) {
+                        alert('Geolocation is not supported by your browser.');
+                        return;
+                    }
+
+                    const originalText = heroNearestBtn.textContent;
+                    heroNearestBtn.disabled = true;
+                    heroNearestBtn.textContent = 'Locating...';
+
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            const url = `discover.html?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&nearest=true`;
+                            window.location.href = url;
+                        },
+                        (error) => {
+                            heroNearestBtn.disabled = false;
+                            heroNearestBtn.textContent = originalText;
+
+                            if (error.code === error.PERMISSION_DENIED) {
+                                alert('We could not access your location. Please allow location access in your browser and try again.');
+                            } else {
+                                alert('Unable to fetch your location right now. Please try again in a moment.');
+                            }
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000
+                        }
+                    );
+                });
+            }
+        });
+    </script>
 </body>
 </html>
